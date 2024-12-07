@@ -20,6 +20,10 @@ try:
         # print(f"Step {step}: {len(vehicles)} vehicles, {len(traffic_lights)} traffic lights")
 
         for veh_id in vehicles:
+            lane_id = traci.vehicle.getLaneID(veh_id)
+            print(f"Vehicle {veh_id} lane: {lane_id}")
+            vehicle_wait_time = traci.vehicle.getAccumulatedWaitingTime(veh_id)
+            print(f"Vehicle {veh_id} wait time: {vehicle_wait_time}")
             speed = traci.vehicle.getSpeed(veh_id)  # Get speed of each vehicle
             print(f"Vehicle {veh_id} speed: {speed}")
         step += 1
