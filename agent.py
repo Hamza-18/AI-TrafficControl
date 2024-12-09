@@ -35,4 +35,3 @@ class Qagent:
         self.acc_reward += reward
 
 
-        import numpy as np
