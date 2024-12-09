@@ -21,13 +21,20 @@ class Enviornment:
         traffic_flow_level1 = 0
         traffic_flow_level2 = 0
         traffic_flow_level3 = 0
+        self.wait_time_level1 = 0
+        self.wait_time_level2 = 0
+        self.wait_time_level3 = 0
         for veh_id in vehicles:
-            lane_id = traci.vehicle.getLaneID(veh_id)
-            if lane_id == "-E0_0":
+            lane_id = traci.vehicle.getRoadID(veh_id)
+            vehicle_wait_time = traci.vehicle.getAccumulatedWaitingTime(veh_id)
+            if lane_id == "-E0":
                 traffic_flow_level1 += 1
-            elif lane_id == "-E0.74_0":
+                self.wait_time_level1 += vehicle_wait_time
+            elif lane_id == "E0":
                 traffic_flow_level2 += 1
-            elif lane_id == "gneE0_2":
+                self.wait_time_level2 += vehicle_wait_time
+            elif lane_id == "E1":
                 traffic_flow_level3 += 1
+                self.wait_time_level3 += vehicle_wait_time
 
-
+        
