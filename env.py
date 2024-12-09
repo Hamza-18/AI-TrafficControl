@@ -30,13 +30,4 @@ class Enviornment:
             elif lane_id == "gneE0_2":
                 traffic_flow_level3 += 1
 
-    def intialise_q_table(self):
-        self.q_table = np.zeros((self.num_states, self.phases))
 
-    def state_to_index(phase, traffic_flow_level1, traffic_flow_level2, traffic_flow_level3):
-        phase_map = {"GRY": 0, "YEL": 1, "RED": 2}  # Phase to integer mapping
-        # Get phase index
-        phase_index = phase_map[phase]
-        # Calculate state index
-        state_index = (phase_index * (3**3) + traffic_flow_level1 * (3**2) + traffic_flow_level2 * 3 + traffic_flow_level3)
-        return state_index
