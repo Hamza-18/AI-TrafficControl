@@ -10,11 +10,8 @@ class Enviornment:
         self.lanes = 3
         self.traffic_flow = 3 # (low, med, high)
         self.num_states = self.traffic_flow ** self.lanes * self.phases    
-        # lanes from right -E0 after -E0.74
-        # lanes from left E0 E0.29
-        # E1 E0.29 
         
-    def get_intial_state(self):
+    def get_state(self):
         '''get current phase from traci and traffic flow from each lane'''
         state = traci.trafficlight.getRedYellowGreenState(self.tl_id)
         vehicles = traci.vehicle.getIDList()  # Get list of vehicles
@@ -58,6 +55,48 @@ class Enviornment:
         else:
             traffic_flow_bot = "low"
 
-        return state, traffic_flow_top_right, traffic_flow_bot_left, traffic_flow_bot
-
+        return state, traffic_flow_top_right, traffic_flow_bot, traffic_flow_bot_left 
+    
+    def get_reward(self, new_state, old_state):
+        state_map = {"low": 0, "med": 1, "high": 2}
+        _, traffic_flow_top_right, traffic_flow_bot, traffic_flow_bot_left = new_state
+        _, traffic_flow_top_right_old, traffic_flow_bot_old, traffic_flow_bot_left_old = old_state
+        reward = 0
+        # top right lane
+        if traffic_flow_top_right[state_map] > traffic_flow_top_right_old[state_map]:
+            reward -= 50 * traffic_flow_top_right[state_map]
+        elif traffic_flow_top_right[state_map] < traffic_flow_top_right_old[state_map]:
+            reward += 50 * traffic_flow_top_right[state_map]
+        elif traffic_flow_top_right[state_map] == traffic_flow_top_right_old[state_map]:
+            if traffic_flow_top_right[state_map] == 0:
+                reward += 10
+            else:
+                reward -= 20
         
+        # bottom lane
+        if traffic_flow_bot[state_map] > traffic_flow_bot_old[state_map]:
+            reward -= 50 * traffic_flow_bot[state_map]
+        elif traffic_flow_bot[state_map] < traffic_flow_bot_old[state_map]:
+            reward += 50 * traffic_flow_bot[state_map]
+        elif traffic_flow_bot[state_map] == traffic_flow_bot_old[state_map]:
+            if traffic_flow_bot[state_map] == 0:
+                reward += 10
+            else:
+                reward -= 20
+        # bottom left lane
+        if traffic_flow_bot_left[state_map] > traffic_flow_bot_left_old[state_map]:
+            reward -= 50 * traffic_flow_bot_left[state_map]
+        elif traffic_flow_bot_left[state_map] < traffic_flow_bot_left_old[state_map]:
+            reward += 50 * traffic_flow_bot_left[state_map]
+        elif traffic_flow_bot_left[state_map] == traffic_flow_bot_left_old[state_map]:
+            if traffic_flow_bot_left[state_map] == 0:
+                reward += 10
+            else:
+                reward -= 20
+        return reward
+    
+    def perform_action(self, action):
+        traci.trafficlight.setRedYellowGreenState(self.tl_id, action)
+        traci.simulationStep()
+        new_state = self.get_state()
+        return new_state
