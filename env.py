@@ -92,13 +92,42 @@ class Enviornment:
                 self.reward += 10
             else:
                 self.reward -= 20
+        current_phase = traci.trafficlight.getRedYellowGreenState(self.tl_id)
+        if current_phase not in ["GrG", "Gry", "GGr", "Gyr"]:
+            self.reward -= 50  # Penalize invalid phases
         return self.reward
     
     def perform_action(self, action):
-        traci.trafficlight.setRedYellowGreenState(self.tl_id, action)
+        """
+        Apply the chosen action and ensure valid traffic light state transitions.
+        """
+        current_state = traci.trafficlight.getRedYellowGreenState(self.tl_id)
+        print(f"Current State: {current_state}, Action: {action}")
+
+        # Valid phase transitions based on your defined phases
+        valid_transitions = {
+            "GrG": "Gry",
+            "Gry": "GGr",
+            "GGr": "Gyr",
+            "Gyr": "GrG"
+        }
+
+        # Get the expected next state
+        expected_next_state = valid_transitions.get(current_state)
+
+        if action == expected_next_state:
+            # Transition to the expected state
+            traci.trafficlight.setRedYellowGreenState(self.tl_id, action)
+            print(f"Transitioned to: {action}")
+        else:
+            # Skip invalid transitions and log
+            print(f"Invalid action: {action}. Expected: {expected_next_state}. Keeping current state.")
+
+        # Step the simulation
         traci.simulationStep()
-        new_state = self.get_state()
-        return new_state
+
+        # Return the new state
+        return self.get_state()
     
     def reset(self):
         traci.load(["-n", "intersection.net.xml", "-r", "intersection.rou.xml", "--start"])
