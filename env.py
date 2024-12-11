@@ -5,8 +5,8 @@ class Enviornment:
 
     def __init__(self, tl_id):
         self.tl_id = tl_id
-        self.phases = 4
-        self.lanes = 3
+        self.phases = 6
+        self.lanes = 4
         self.traffic_flow = 3 # (low, med, high)
         self.num_states = self.traffic_flow ** self.lanes * self.phases    
         self.reward = 0
@@ -18,9 +18,11 @@ class Enviornment:
         traffic_flow_top_right = 0
         traffic_flow_bot_left = 0
         traffic_flow_bot = 0
+        traffic_flow_top = 0
         self.wait_traffic_flow_top_right = 0
         self.wait_traffic_flow_bot_left = 0
         self.wait_traffic_flow_bot = 0
+        self.wait_traffic_flow_top = 0
         for veh_id in vehicles:
             lane_id = traci.vehicle.getRoadID(veh_id)
             vehicle_wait_time = traci.vehicle.getAccumulatedWaitingTime(veh_id)
@@ -33,6 +35,9 @@ class Enviornment:
             elif lane_id == "E1":
                 traffic_flow_bot += 1
                 self.wait_traffic_flow_bot += vehicle_wait_time
+            elif lane_id == "E2":
+                traffic_flow_top += 1
+                self.wait_traffic_flow_top += vehicle_wait_time
         
         if self.wait_traffic_flow_top_right > 25:
             traffic_flow_top_right = "high"
@@ -54,13 +59,20 @@ class Enviornment:
             traffic_flow_bot = "med"
         else:
             traffic_flow_bot = "low"
+        
+        if self.wait_traffic_flow_top > 50: 
+            traffic_flow_top = "high"           
+        elif self.wait_traffic_flow_top > 20 and self.wait_traffic_flow_top < 50:
+            traffic_flow_top = "med"
+        else:
+            traffic_flow_top = "low"
 
-        return state, traffic_flow_top_right, traffic_flow_bot, traffic_flow_bot_left 
+        return state, traffic_flow_top_right, traffic_flow_bot, traffic_flow_bot_left, traffic_flow_top 
     
     def get_reward(self, new_state, old_state):
         state_map = {"low": 0, "med": 1, "high": 2}
-        _, traffic_flow_top_right, traffic_flow_bot, traffic_flow_bot_left = new_state
-        _, traffic_flow_top_right_old, traffic_flow_bot_old, traffic_flow_bot_left_old = old_state
+        _, traffic_flow_top_right, traffic_flow_bot, traffic_flow_bot_left, traffic_flow_top = new_state
+        _, traffic_flow_top_right_old, traffic_flow_bot_old, traffic_flow_bot_left_old, traffic_flow_top_old = old_state
         # top right lane
         if state_map[traffic_flow_top_right] > state_map[traffic_flow_top_right_old]:
             self.reward -= 25 *  state_map[traffic_flow_top_right]
@@ -91,10 +103,20 @@ class Enviornment:
             if state_map[traffic_flow_bot_left] == 0:
                 self.reward += 10
             else:
-                self.reward -= 10
+                self.reward -= 20
+        # top lane
+        if state_map[traffic_flow_top] > state_map[traffic_flow_top_old]:
+            self.reward -= 50 * state_map[traffic_flow_top]
+        elif state_map[traffic_flow_top] < state_map[traffic_flow_top_old]:
+            self.reward += 50 * state_map[traffic_flow_top]
+        elif state_map[traffic_flow_top] == state_map[traffic_flow_top_old]:
+            if state_map[traffic_flow_top] == 0:
+                self.reward += 10
+            else:
+                self.reward -= 20
         current_phase = traci.trafficlight.getRedYellowGreenState(self.tl_id)
         if current_phase not in ["GrG", "Gry", "GGr", "Gyr"]:
-            self.reward -= 25  # Penalize invalid phases
+            self.reward -= 50  # Penalize invalid phases
         return self.reward
     
     def perform_action(self, action):
@@ -106,10 +128,12 @@ class Enviornment:
 
         # Valid phase transitions based on your defined phases
         valid_transitions = {
-            "GrG": "Gry",
-            "Gry": "GGr",
-            "GGr": "Gyr",
-            "Gyr": "GrG"
+            "rrGrrG": "rryrry",
+            "rryrry": "GGrrrr",
+            "GGrrrr": "yyrrrr",
+            "yyrrrr": "rrrGGr",
+            "rrrGGr": "rrryyr",
+            "rrryyr": "rrGrrG"
         }
 
         # Get the expected next state

@@ -17,7 +17,7 @@ class Qagent:
 
     def create_action_space(self):
         self.action_space = list(range(self.phases))  # Action space is a list of indices [0, 1, 2, ...]
-        self.action_map = {0:"GrG", 1:"Gry", 2:"GGr", 3:"Gyr" }
+        self.action_map = {0:"rrGrrG", 1:"rryrry", 2:"GGrrrr", 3:"yyrrrr", 4:"rrrGGr",5:"rrryyr" }
 
     def choose_action(self, state):
         if np.random.uniform(0, 1) < self.epsilon:
