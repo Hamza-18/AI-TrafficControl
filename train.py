@@ -6,11 +6,12 @@ from env import Enviornment
 from agent import Qagent
 import numpy as np
 
-traci.start(["venv/bin/sumo-gui", "-n", "intersection.net.xml","-r", "intersection.rou.xml", "--start"])  # Use sumo-gui for GUI mode
+traci.start(["venv/bin/sumo", "-n", "intersection.net.xml","-r", "intersection.rou.xml", "--start"])  # Use sumo-gui for GUI mode
 step = 0
 agent = Qagent(4)
 min_episolon = 0.05
 max_episolon = 1
+env = Enviornment("clusterJ4_J6_J7")
 decay_rate = 0.0005
 
 for i in range(2):
@@ -18,7 +19,6 @@ for i in range(2):
     step = 0
     while step < 15000:
         print(f"step {step}")
-        env = Enviornment("clusterJ4_J6_J7")
         traci.simulationStep()
         state = env.get_state()
         agent.set_initial_state(state)
