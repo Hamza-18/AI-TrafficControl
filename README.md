@@ -1,6 +1,39 @@
 # AI-TrafficControl
 
-This project is a simple yet effective demonstration of using reinforcement learning (specifically Q-learning) to optimize traffic light timings. It integrates with SUMO (Simulation of Urban Mobility) to simulate traffic scenarios, enabling us to train and test a Q-learning agent to improve traffic flow. Below, you'll find a detailed explanation of all the files and processes involved.
+This project is a simple yet effective demonstration of using reinforcement learning (specifically Q-learning) to optimize traffic light timings. It integrates with SUMO (Simulation of Urban Mobility) to simulate traffic scenarios, enabling us to train and test a Q-learning agent to improve traffic flow.
+
+## Motivation
+
+We’ve all been stuck at a red light, watching an empty intersection while traffic builds up behind us. It’s frustrating and wastes time, fuel, and energy. That got us thinking—what if traffic lights could get smarter? Instead of following the same fixed patterns, they could adjust based on actual traffic conditions.
+
+This project is our attempt to tackle that problem using AI. By teaching a program to manage traffic lights in a way that reduces waiting times and keeps things moving smoothly, we hope to show how technology can make everyday life better. It’s a simple idea with a big impact: fewer traffic jams, less stress, and more time for the things that matter.
+
+## How the Project Works
+
+#### Step 1: Setting Things Up
+We design a virtual traffic intersection with SUMO, a traffic simulation tool, using files to set up the roads (intersection.net.xml) and routes (intersection.rou.xml).
+Then we connect SUMO to Python using a library called traci so our code can control the traffic lights.
+
+#### Step 2: Creating the Brain
+We build a "smart brain" (a Q-learning agent in agent.py) that makes decisions on how to manage traffic lights.
+It learns what’s happening on the road (traffic states), figures out its options (actions), and gets feedback (rewards) on whether its choices helped or made traffic worse.
+
+#### Step 3: Running the Simulation
+The environment (env.py) runs the traffic simulation, showing what’s happening at the intersection in real time.
+The agent makes decisions based on this information and tries to improve traffic flow.
+
+#### Step 4: Training the Brain
+We use the train.py script to teach the agent over many rounds of simulation.
+It keeps getting better at making decisions by learning from its successes and mistakes.
+
+#### Step 5: Testing the Brain
+Once the agent is trained, we run the test.py script to see how well it handles traffic in new situations.
+This is like putting it to the test in a real-world scenario (virtually, of course).
+
+#### Step 6: Checking the Results
+Finally, we see how much the agent improves traffic compared to regular timed traffic lights.
+If it’s not perfect, we can tweak some settings (like how quickly it learns or explores new ideas) to make it even better.
+
 
 ## 1-agent.py
 
@@ -112,13 +145,6 @@ Initialize Agent: A Q-learning agent is created and initialized.
 Epsilon Decay: The exploration-exploitation balance (epsilon) decays over time, encouraging the agent to exploit its knowledge as training progresses.
 Simulation Steps: The agent interacts with the simulation by taking actions based on its current state, learning from the rewards and adjusting its Q-values accordingly.
 Episodes: The training runs for multiple episodes, where the agent gradually improves its performance.
-Training Parameters:
-
-Epsilon: Starts high to encourage exploration, then decays to favor exploitation.
-Learning: The agent updates its Q-table based on rewards received for actions taken in each state.
-Outcome:
-
-A trained Q-table that guides the agent’s decision-making to optimize traffic flow in the simulation.
 
 
 ## 4. test.py
@@ -137,4 +163,19 @@ These files define the traffic network and routes for SUMO:
 
 intersection.net.xml: Describes the road network, including lanes, traffic lights, and connections.
 intersection.rou.xml: Specifies vehicle routes, spawn times, and destinations to simulate realistic traffic.
+
+## What we accomplished
+
+We achieved everything we set out to do:
+-Successfully built a simulation of a traffic intersection.
+-Trained a smart traffic light controller using Q-learning.
+-Improved traffic flow compared to traditional timed lights.
+-Tested the trained agent in different scenarios, showing great results.
+
+## How we measured our success
+
+-Compared simulations without an agent and with an agent- the difference could be clearly seen
+-Measured accumulated reward during the training process
+
+
 
