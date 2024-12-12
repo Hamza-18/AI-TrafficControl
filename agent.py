@@ -1,13 +1,14 @@
 import numpy as np
 
 class Qagent:
-    def __init__(self, phases):
+    def __init__(self, phases, env):
         self.alpha = 0.1
         self.gamma = 0.6
         self.epsilon = 0.1
         self.q_table = {}  # Initialize Q-table as a dictionary        
         self.phases = phases
         self.acc_reward = 0
+        self.env = env
         self.create_action_space()
 
     def set_initial_state(self, state):
@@ -17,7 +18,24 @@ class Qagent:
 
     def create_action_space(self):
         self.action_space = list(range(self.phases))  # Action space is a list of indices [0, 1, 2, ...]
-        self.action_map = {0:"rrGrrG", 1:"rryrry", 2:"GGrrrr", 3:"yyrrrr", 4:"rrrGGr",5:"rrryyr" }
+        self.action_map = {
+            0: "yGrG",
+            1: "yGGr",
+            2: "GyGr",
+            3: "GyGr",
+            4: "GrGy",
+            5: "GrGy",
+            6: "GGrY",
+            7: "GGrY",
+            8: "rGyG",
+            9: "rGGy",
+            10: "GryG",
+            11: "GryG",
+            12: "GyrG",
+            13: "GyGr",
+            14: "rGyr",
+            15: "rGyG" }
+        self.env.generate_valid_transitions(self.action_map)
 
     def choose_action(self, state):
         if np.random.uniform(0, 1) < self.epsilon:

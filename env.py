@@ -117,7 +117,20 @@ class Enviornment:
         current_phase = traci.trafficlight.getRedYellowGreenState(self.tl_id)
         if current_phase not in ["GrG", "Gry", "GGr", "Gyr"]:
             self.reward -= 50  # Penalize invalid phases
-        return self.reward
+        return self.reward\
+    
+    def generate_valid_transitions(self,traffic_states):
+        self.valid_transitions = {}
+        for state_index, state in traffic_states.items():
+            next_states = []
+            for i in range(len(state)):
+            # Toggle the current light, keeping others the same
+                next_state = state[:i] + ('G' if state[i] == 'r' else 'r') + state[i+1:]
+                next_states.append(next_state)
+                self.valid_transitions[state] = next_states
+        print(self.valid_transitions)
+        exit(1)
+        return self.valid_transitions
     
     def perform_action(self, action):
         """
@@ -125,19 +138,10 @@ class Enviornment:
         """
         current_state = traci.trafficlight.getRedYellowGreenState(self.tl_id)
         print(f"Current State: {current_state}, Action: {action}")
-
-        # Valid phase transitions based on your defined phases
-        valid_transitions = {
-            "rrGrrG": "rryrry",
-            "rryrry": "GGrrrr",
-            "GGrrrr": "yyrrrr",
-            "yyrrrr": "rrrGGr",
-            "rrrGGr": "rrryyr",
-            "rrryyr": "rrGrrG"
-        }
+    
 
         # Get the expected next state
-        expected_next_state = valid_transitions.get(current_state)
+        expected_next_state = self.valid_transitions.get(current_state)
 
         if action == expected_next_state:
             # Transition to the expected state
