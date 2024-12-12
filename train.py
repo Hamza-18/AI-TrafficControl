@@ -14,7 +14,7 @@ max_episolon = 1
 env = Enviornment("clusterJ4_J6_J7")
 decay_rate = 0.0005
 
-for i in range(2):
+for i in range(30):
     agent.epsilon = min_episolon + (max_episolon - min_episolon) * np.exp(-decay_rate * i)
     step = 0
     while step < 15000:
