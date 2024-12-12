@@ -82,7 +82,7 @@ class Enviornment:
             if state_map[traffic_flow_top_right] == 0:
                 self.reward += 10
             else:
-                self.reward -= 10
+                self.reward -= 5
         
         # bottom lane
         if state_map[traffic_flow_bot] > state_map[traffic_flow_bot_old]:
@@ -93,7 +93,7 @@ class Enviornment:
             if state_map[traffic_flow_bot] == 0:
                 self.reward += 10
             else:
-                self.reward -= 10
+                self.reward -= 5
         # bottom left lane
         if state_map[traffic_flow_bot_left] > state_map[traffic_flow_bot_left_old]:
             self.reward -= 25 * state_map[traffic_flow_bot_left]
@@ -103,20 +103,17 @@ class Enviornment:
             if state_map[traffic_flow_bot_left] == 0:
                 self.reward += 10
             else:
-                self.reward -= 20
+                self.reward -= 5
         # top lane
         if state_map[traffic_flow_top] > state_map[traffic_flow_top_old]:
-            self.reward -= 50 * state_map[traffic_flow_top]
+            self.reward -= 25 * state_map[traffic_flow_top]
         elif state_map[traffic_flow_top] < state_map[traffic_flow_top_old]:
             self.reward += 50 * state_map[traffic_flow_top]
         elif state_map[traffic_flow_top] == state_map[traffic_flow_top_old]:
             if state_map[traffic_flow_top] == 0:
                 self.reward += 10
             else:
-                self.reward -= 20
-        current_phase = traci.trafficlight.getRedYellowGreenState(self.tl_id)
-        if current_phase not in ["GrGr","yryr","rGrG","ryry"]:
-            self.reward -= 50  # Penalize invalid phases
+                self.reward -= 5    
         return self.reward\
     
     

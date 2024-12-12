@@ -20,7 +20,7 @@ agent.q_table = q_table  # Load the saved Q-table into the agent
 step = 0
 total_reward = 0
 
-while step < 1000:  # Set an appropriate number of test steps
+while step < 15000:  # Set an appropriate number of test steps
     print(f"Testing step {step}")
     traci.simulationStep()
     # Choose the action based on the learned Q-table

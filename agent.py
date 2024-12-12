@@ -1,14 +1,13 @@
 import numpy as np
 
 class Qagent:
-    def __init__(self, phases, env):
+    def __init__(self, phase):
         self.alpha = 0.1
         self.gamma = 0.6
         self.epsilon = 0.1
         self.q_table = {}  # Initialize Q-table as a dictionary        
-        self.phases = phases
+        self.phases = phase
         self.acc_reward = 0
-        self.env = env
         self.create_action_space()
 
     def set_initial_state(self, state):
