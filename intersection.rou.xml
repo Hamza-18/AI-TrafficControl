@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2024-12-09 00:45:15 by Eclipse SUMO netedit Version 1.21.0
+<!-- generated on 2024-12-11 19:25:49 by Eclipse SUMO netedit Version 1.21.0
 -->
 
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
@@ -12,4 +12,5 @@
     <flow id="f_1" begin="0.00" from="-E0" to="-E0.74" end="3600.00" number="1800"/>
     <flow id="f_2" begin="0.00" from="E1" to="E0.29" end="3600.00" vehsPerHour="1800"/>
     <flow id="f_3" begin="0.00" from="E0" to="E0.29" end="3600.00" vehsPerHour="1800"/>
+    <flow id="f_4" begin="0.00" from="E2" to="-E0.74" end="3600.00" vehsPerHour="1800"/>
 </routes>

@@ -1,12 +1,12 @@
 import numpy as np
 
 class Qagent:
-    def __init__(self, phases):
+    def __init__(self, phase):
         self.alpha = 0.1
         self.gamma = 0.6
         self.epsilon = 0.1
         self.q_table = {}  # Initialize Q-table as a dictionary        
-        self.phases = phases
+        self.phases = phase
         self.acc_reward = 0
         self.create_action_space()
 
@@ -17,7 +17,7 @@ class Qagent:
 
     def create_action_space(self):
         self.action_space = list(range(self.phases))  # Action space is a list of indices [0, 1, 2, ...]
-        self.action_map = {0:"GrG", 1:"Gry", 2:"GGr", 3:"Gyr" }
+        self.action_map = {0:"GrGr",1:"yryr",2:"rGrG",3:"ryry"}
 
     def choose_action(self, state):
         if np.random.uniform(0, 1) < self.epsilon:

@@ -3,7 +3,7 @@ from env import Enviornment
 from agent import Qagent
 import numpy as np
 
-traci.start(["venv/bin/sumo-gui", "-n", "intersection.net.xml","-r", "intersection.rou.xml", "--start", "--delay", "200"])  # Use sumo-gui for GUI mode
+traci.start(["venv/bin/sumo-gui", "-n", "intersection.net.xml","-r", "intersection.rou.xml", "--start", "--delay", "5"])  # Use sumo-gui for GUI mode
 
 # Load Q-table from the saved file (use the appropriate loading method)
 q_table = np.load('q_table.npy', allow_pickle=True).item()
@@ -20,7 +20,7 @@ agent.q_table = q_table  # Load the saved Q-table into the agent
 step = 0
 total_reward = 0
 
-while step < 1000:  # Set an appropriate number of test steps
+while step < 15000:  # Set an appropriate number of test steps
     print(f"Testing step {step}")
     traci.simulationStep()
     # Choose the action based on the learned Q-table
