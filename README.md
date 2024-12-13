@@ -172,7 +172,12 @@ To install the required Python packages and download SUMO, follow these steps:
 4. Verify sumo installation 
     ```bash 
     sumo --version
+5. Set sumo path in train and test.py
+    - Based on your virtual environment path update the below for the following line:
+        ```Python
+        traci.start(["venv/bin/sumo-gui", "-n", "intersection.net.xml","-r", "intersection.rou.xml", "--start"])  # Use sumo-gui for GUI mode
 If there is any  issue  during installation and running the program, please reach out. If there is any issue most likely it will be because of Sumo.
+
 <h1 style="font-size: 24px;">Train</h1>
 This file trains a Q-learning agent to optimize traffic flow in a simulation environment.
 
@@ -188,10 +193,15 @@ Epochs: The training runs for multiple epochs, where the agent gradually improve
 
 **How to Run**
 
-In order to run the code, use the following command:
+In order to run the code, use the following command. By default it will use CLI mode for sumo
     
 
     python train.py
+If you want to run it in GUI mode then add the following command:
+
+    python train.py --gui=true
+
+Click the Image below to watch a short video
 
 [![Watch the video](thumbnail.png)](https://drive.google.com/file/d/1yXx80XOR9vG09wPnh2W_t1vo_5_yQBH4/view?usp=sharing)
 
@@ -208,6 +218,9 @@ In order to run the code, use the following command:
     
 
     python test.py
+
+Click the Image below to watch a short video
+
 [![Watch the video](thumbnail.png)](https://drive.google.com/file/d/1VfQgDuK-0ie7cF29t-CVbPnMYh3ZGre5/view?usp=sharing)
 
 **Performance Metrics**:
@@ -215,7 +228,7 @@ Actions chosen for each state.
 Total rewards earned.
 Traffic efficiency improvements (e.g., reduced waiting times, smoother flow). 
 
-<h1 style="font-size: 24px;">Intersction xml</h1>
+<h1 style="font-size: 24px;">Intersection xml</h1>
 
 These files define the traffic network and routes for SUMO:
 

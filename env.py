@@ -8,7 +8,6 @@ class Enviornment:
         self.phases = 6
         self.lanes = 4
         self.traffic_flow = 3 # (low, med, high)
-        self.num_states = self.traffic_flow ** self.lanes * self.phases    
         self.reward = 0
 
     def get_state(self):
@@ -23,6 +22,7 @@ class Enviornment:
         self.wait_traffic_flow_bot_left = 0
         self.wait_traffic_flow_bot = 0
         self.wait_traffic_flow_top = 0
+        # for each vehicle, get the lane id and accumulated waiting time
         for veh_id in vehicles:
             lane_id = traci.vehicle.getRoadID(veh_id)
             vehicle_wait_time = traci.vehicle.getAccumulatedWaitingTime(veh_id)
@@ -38,7 +38,7 @@ class Enviornment:
             elif lane_id == "E2":
                 traffic_flow_top += 1
                 self.wait_traffic_flow_top += vehicle_wait_time
-        
+        # get the traffic flow for each lane
         if self.wait_traffic_flow_top_right > 50:
             traffic_flow_top_right = "high"
         elif self.wait_traffic_flow_top_right > 25 and self.wait_traffic_flow_top_right < 50:
@@ -70,6 +70,7 @@ class Enviornment:
         return state, traffic_flow_top_right, traffic_flow_bot, traffic_flow_bot_left, traffic_flow_top 
     
     def get_reward(self, new_state, old_state):
+        '''calculate the reward based on the traffic flow of each lane'''
         state_map = {"low": 0, "med": 1, "high": 2}
         _, traffic_flow_top_right, traffic_flow_bot, traffic_flow_bot_left, traffic_flow_top = new_state
         _, traffic_flow_top_right_old, traffic_flow_bot_old, traffic_flow_bot_left_old, traffic_flow_top_old = old_state
@@ -113,7 +114,10 @@ class Enviornment:
             if state_map[traffic_flow_top] == 0:
                 self.reward += 10
             else:
-                self.reward -= 5    
+                self.reward -= 5   
+        # state = traci.trafficlight.getRedYellowGreenState(self.tl_id)
+        # if state not in ["GrGr", "yryr", "rGrG", "ryry"]:
+        #     self.reward -= 10
         return self.reward
     
     
@@ -148,6 +152,7 @@ class Enviornment:
         return self.get_state()
     
     def reset(self):
+        '''reset the simulation for next Epoch'''
         traci.load(["-n", "intersection.net.xml", "-r", "intersection.rou.xml", "--start"])
         self.reward = 0
         self.wait_traffic_flow_bot = 0
