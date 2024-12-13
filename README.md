@@ -14,28 +14,27 @@ This project is our attempt to tackle that problem using AI. By teaching a progr
 We design a virtual traffic intersection with SUMO, a traffic simulation tool, using files to set up the roads (intersection.net.xml) and routes (intersection.rou.xml).
 Then we connect SUMO to Python using a library called traci so our code can control the traffic lights.
 
-#### Step 2: Creating the Brain
-We build a "smart brain" (a Q-learning agent in agent.py) that makes decisions on how to manage traffic lights.
+#### Step 2: Creating the Agent
+We build an agent that makes decisions on how to manage traffic lights.
 It learns what’s happening on the road (traffic states), figures out its options (actions), and gets feedback (rewards) on whether its choices helped or made traffic worse.
 
 #### Step 3: Running the Simulation
 The environment (env.py) runs the traffic simulation, showing what’s happening at the intersection in real time.
 The agent makes decisions based on this information and tries to improve traffic flow.
 
-#### Step 4: Training the Brain
+#### Step 4: Training the Agemt
 We use the train.py script to teach the agent over many rounds of simulation.
 It keeps getting better at making decisions by learning from its successes and mistakes.
 
-#### Step 5: Testing the Brain
-Once the agent is trained, we run the test.py script to see how well it handles traffic in new situations.
-This is like putting it to the test in a real-world scenario (virtually, of course).
+#### Step 5: Testing the Agent
+Once the agent is trained, we run the test.py script to see how well it handles traffic in the network.
 
 #### Step 6: Checking the Results
 Finally, we see how much the agent improves traffic compared to regular timed traffic lights.
 If it’s not perfect, we can tweak some settings (like how quickly it learns or explores new ideas) to make it even better.
 
 
-## 1-agent.py
+<h1 style="font-size: 24px;">Agent</h1>
 
 #### Overview of Q-Learning Agent
 This file contains the Q-learning agent, which is designed to control traffic lights. The agent's goal is to learn the best traffic light control policy using reinforcement learning, so it can minimize traffic congestion and improve traffic flow over time.
@@ -47,51 +46,62 @@ Think of the Q-table as a large table where:
 Rows represent states (e.g., current traffic conditions, current traffic light phases).
 Columns represent actions (e.g., which traffic light phase to switch to, or whether to keep the current phase).
 Each cell in the table contains a Q-value, which tells the agent how good it is to take a specific action in a particular state.
-The idea is that the agent will learn over time which actions (traffic light phases) lead to the best results (reducing wait times for cars stuck in traffic/signal).
+The idea is that the agent will learn over time which actions (traffic light phases) lead to the best results (reducing wait times for cars stuck in traffic/signal). In this problem we have continuous state space rather than discrete. So Q-table is update when agent explores a new state. Initially Q-table is empty.
 
-#### Key Functions in the Agent
+<h3> Key Functions in the Agent </h3>
 
-**initialization functions**
-These function create the Q-table and initialize all the values to zero.
-Before the agent can start learning, it needs an empty Q-table to fill with values as it interacts with the environment. The dimensions of this table depend on how many states and actions are possible.
+**Initialization functions** 
+These are the helper functions which intialize an empty Q-table, creates action space and sets the initial state for the enviornment. 
 
-**choose_action**
-This function decides which action (traffic light change) the agent should take in a given state. It does this using something called the epsilon-greedy strategy.
+**Action Space**\
+Action space is discrete which is based on the network we made. For example we have 4 lanes then following will be the actions:
+<ol>
+  <li>GrGr</li>
+  <li>yryr</li>
+  <li>rGrG</li>
+  <li>ryry</li>
+</ol>
+
+<div style="text-align: center;">
+  <img src="image-1.png" alt="Traffic Action Space" style="max-width: 50%; height: auto;">
+</div>
+
+
+**choose_action**\
+This function decides which action (traffic light change) the agent should take in a given state. It does this using the epsilon-greedy strategy.
 Exploration: Sometimes the agent will choose a random action. This is the agent’s way of exploring new actions, even if it doesn’t know if they’re good or bad yet.
 Exploitation: Other times, the agent will choose the action with the highest Q-value for the current state. This is called exploitation—basically, the agent is playing it safe by sticking with the best-known action.
 The agent needs to balance exploration (to discover new things) and exploitation (to make the best use of what it’s already learned). The epsilon value controls how often the agent explores versus exploits.
 
-**learn**
-This function is where the Q-learning magic happens. It updates the Q-values in the Q-table based on feedback from the environment. The formula used is:
+**learn**\
+This function is where the Q-learning happens. It updates the Q-values in the Q-table based on feedback from the environment. The formula used is:
 
 `Q(state, action) = Q(state, action) + alpha * (reward + gamma * max(Q(next_state, :)) - Q(state, action))`
 
-alpha: This is the learning rate. It controls how quickly the agent learns from new experiences. If alpha is too small, the agent will learn slowly; if it’s too big, it might learn too quickly and forget what it has learned.
-gamma: This is the discount factor. It controls how much the agent cares about future rewards. If gamma is close to 0, the agent focuses mostly on immediate rewards. If gamma is close to 1, the agent thinks more about long-term rewards.
-reward: This is feedback from the environment that tells the agent how good or bad its action was (e.g., reducing wait time).
-max(Q(next_state, :)): This looks at the best possible future Q-value for the next state, which helps the agent predict the long-term reward.
-This function updates the Q-values over time, helping the agent get better at making decisions. The more experiences it has, the better it gets at choosing actions that lead to higher rewards.
-
+alpha: This is the learning rate. It controls how quickly the agent learns from new experiences. If alpha is too small, the agent will learn slowly; if it’s too big, it might learn too quickly and forget what it has learned.\
+gamma: This is the discount factor. It controls how much the agent cares about future rewards. If gamma is close to 0, the agent focuses mostly on immediate rewards. If gamma is close to 1, the agent thinks more about long-term rewards.\
+reward: This is feedback from the environment that tells the agent how good or bad its action was (e.g., reducing wait time).\
+max(Q(next_state, :)): This looks at the best possible future Q-value for the next state, which helps the agent predict the long-term reward.\
+This function updates the Q-values over time, helping the agent get better at making decisions. The more experiences it has, the better it gets at choosing actions that lead to higher rewards.\
 **Training Flow**
 Here’s how the agent trains:
 The agent observes the current state (traffic conditions).
 It chooses an action (change the traffic light).
 It receives a reward (improved traffic flow) and observes the next state (updated traffic conditions).
 The agent updates the Q-value for the action it took, based on the reward and the potential future rewards.
-Through this process, the agent gradually learns the best actions to take in different states.
-
+Through this process, the agent gradually learns the best actions to take in different states.\
 **Testing Mode**
 In testing mode, the agent switches from learning (exploring) to just using what it has already learned. This means:
 The agent only exploits the best-known policies and doesn't explore new actions.
 It evaluates how well the learned policy performs in real traffic scenarios.
 
-## 2. env.py
+<h1 style="font-size: 24px;">Env</h1>
 This file defines the interaction between the reinforcement learning agent and the SUMO traffic environment.
 
 #### How States Are Extracted
 A state combines:
-Current traffic light phase (GrG, GGr, Gyr, Gry). G= Green, r=red, y=yellow. 3 lanes means 3 different combinations.
-Traffic density on incoming lanes (e.g., number of cars waiting at each lane). We've divided this into "low", "high' and "medium" traffic
+Current traffic light phase (GrGr, yryr, rGrG, ryry). G= Green, r=red, y=yellow. 4 lanes means 4 different combinations.
+Traffic density on incoming lanes (e.g., number of cars waiting at each lane). We've divided this into "low", "medium' and "high" traffic
 Our total number of states is the total number of unique states the environment can have, based on the possible traffic flow levels for each lane and the number of traffic light phases. The calculation accounts for every combination of traffic flow across all lanes and each traffic light phase.
 
 #### Reward Calculation
@@ -113,20 +123,27 @@ Invalid Traffic Light Phases: If the traffic light phase is invalid (not one of 
 This function is designed to encourage smoother traffic by rewarding reduced congestion and penalizing increased congestion.
 
 
-#### Key Functions
+<h3> Key Functions </h3>
 
 **get_state**
-The get_state function gathers the current state of the traffic environment, including the traffic light phase and the flow of vehicles in each lane. It works as follows:
+The get_state function gathers the current state of the traffic from sumo, including the traffic light phase and the flow of vehicles in each lane. It works as follows:
+- **Traffic Light Phase**:  
+  - Retrieve the current traffic light phase (e.g., Green, Yellow, Red) from the SUMO simulation using the `traci` API.
 
-Traffic Light Phase: The function first retrieves the current traffic light phase (e.g., Green, Yellow, Red) from the SUMO simulation using the traci API.
+- **Vehicle Data**:  
+  - Collect a list of vehicles currently in the simulation.  
+  - Check each vehicle's position (lane) and accumulated waiting time (how long they’ve been waiting).
 
-Vehicle Data: It collects a list of vehicles currently in the simulation and checks their position (lane) and accumulated waiting time (how long they’ve been waiting).
+- **Traffic Flow Calculation**:  
+  - Assign each vehicle to one of the four lanes: top-right, bottom-left, top, or bottom.  
+  - Count the number of vehicles in each lane.  
+  - Track the accumulated waiting time for vehicles in each lane.
 
-Traffic Flow Calculation: For each vehicle, the function assigns it to one of the three lanes: top-right, bottom-left, or bottom. It counts the number of vehicles in each lane and tracks their waiting time.
+- **Traffic Flow Classification**:  
+  - If the accumulated waiting time in a lane is more than 50 seconds, classify the traffic flow as **"high"**.  
+  - If the accumulated waiting time is between 20 and 50 seconds, classify the traffic flow as **"medium"**.  
+  - If the accumulated waiting time is less than 20 seconds, classify the traffic flow as **"low"**.
 
-Traffic Flow Classification: If the accumulated wait time in a lane is more than 50 seconds, the traffic flow is classified as "high".
-If it's between 20 and 50 seconds, it’s classified as "medium".
-Otherwise, it’s classified as "low".
 
 This function helps track the environment's state, allowing the agent to make decisions based on real-time traffic conditions.
 
@@ -134,31 +151,71 @@ This function helps track the environment's state, allowing the agent to make de
 Executes the chosen action in SUMO by changing the traffic light phase.
 
 **reset** 
-Resets the simulation environment for a new training/testing episode.
+Resets the simulation environment for a new training/testing epoch.
 
-## 3. train.py
+<h1 style="font-size: 24px;">Setup</h1>
+
+To install the required Python packages and download SUMO, follow these steps:
+
+1. **Install Packages from `requirements.txt`**:
+   ```bash
+   pip install -r requirements.txt
+2. **Download Sumo**:
+    - Visit the [SUMO official website](https://sumo.dlr.de/docs/Downloads.php) to download the latest version.
+
+        - Follow the installation instructions specific to your operating system
+3. **Export Sumo Tools Path**
+    - Windows: Add sumo path using the enviorment variable settings.
+    - Mac/Linux: Run the following command to add sumo path.
+        ```bash
+        export PYTHONPATH="path/python3.10/site-packages/sumo/tools:$PYTHONPATH
+4. Verify sumo installation 
+    ```bash 
+    sumo --version
+If there is any  issue  during installation and running the program, please reach out. If there is any issue most likely it will be because of Sumo.
+<h1 style="font-size: 24px;">Train</h1>
 This file trains a Q-learning agent to optimize traffic flow in a simulation environment.
 
 **Training Process**
 
 Initialize Agent: A Q-learning agent is created and initialized.
+
 Epsilon Decay: The exploration-exploitation balance (epsilon) decays over time, encouraging the agent to exploit its knowledge as training progresses.
+
 Simulation Steps: The agent interacts with the simulation by taking actions based on its current state, learning from the rewards and adjusting its Q-values accordingly.
-Episodes: The training runs for multiple episodes, where the agent gradually improves its performance.
 
+Epochs: The training runs for multiple epochs, where the agent gradually improves its performance.
 
-## 4. test.py
+**How to Run**
+
+In order to run the code, use the following command:
+    ```bash
+
+    python train.py
+
+<video controls src="Screencast from 13-12-2024 15_05_09.mp4" title="Title"></video>
+
+<h1 style="font-size: 24px;">Test</h1>
 This file evaluates the performance of a trained Q-learning agent in a traffic simulation.
 
 **Testing Process**
 Load Q-table: The trained Q-table is loaded from a .npy file.
 Run Simulation: The agent uses the Q-table to make decisions.
+
+**How to Run**
+
+In order to run the code, use the following command:
+    ```bash
+
+    python test.py
+<video controls src="test.mp4" title="Title"></video>
 **Performance Metrics**:
 Actions chosen for each state.
 Total rewards earned.
 Traffic efficiency improvements (e.g., reduced waiting times, smoother flow). 
 
-## 5. intersection.net.xml and intersection.rou.xml
+<h1 style="font-size: 24px;">Intersction xml</h1>
+
 These files define the traffic network and routes for SUMO:
 
 intersection.net.xml: Describes the road network, including lanes, traffic lights, and connections.
