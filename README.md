@@ -189,7 +189,7 @@ Epochs: The training runs for multiple epochs, where the agent gradually improve
 **How to Run**
 
 In order to run the code, use the following command:
-    ```bash
+    
 
     python train.py
 
@@ -205,7 +205,7 @@ Run Simulation: The agent uses the Q-table to make decisions.
 **How to Run**
 
 In order to run the code, use the following command:
-    ```bash
+    
 
     python test.py
 [![Watch the video](thumbnail.png)](https://drive.google.com/file/d/1VfQgDuK-0ie7cF29t-CVbPnMYh3ZGre5/view?usp=sharing)
@@ -225,15 +225,15 @@ intersection.rou.xml: Specifies vehicle routes, spawn times, and destinations to
 ## What we accomplished
 
 We achieved everything we set out to do:
--Successfully built a simulation of a traffic intersection.
--Trained a smart traffic light controller using Q-learning.
--Improved traffic flow compared to traditional timed lights.
--Tested the trained agent in different scenarios, showing great results.
+- Successfully built a simulation of a traffic intersection.
+- Trained a smart traffic light controller using Q-learning.
+- Improved traffic flow compared to traditional timed lights.
+- Tested the trained agent in different scenarios, showing great results.
 
 ## How we measured our success
 
--Compared simulations without an agent and with an agent- the difference could be clearly seen
--Measured accumulated reward during the training process
+- Compared simulations without an agent and with an agent- the difference could be clearly seen
+- Measured accumulated reward during the training process
 
 
 
