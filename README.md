@@ -22,7 +22,7 @@ It learns what’s happening on the road (traffic states), figures out its optio
 The environment (env.py) runs the traffic simulation, showing what’s happening at the intersection in real time.
 The agent makes decisions based on this information and tries to improve traffic flow.
 
-#### Step 4: Training the Agemt
+#### Step 4: Training the Agent
 We use the train.py script to teach the agent over many rounds of simulation.
 It keeps getting better at making decisions by learning from its successes and mistakes.
 
@@ -46,7 +46,7 @@ Think of the Q-table as a large table where:
 Rows represent states (e.g., current traffic conditions, current traffic light phases).
 Columns represent actions (e.g., which traffic light phase to switch to, or whether to keep the current phase).
 Each cell in the table contains a Q-value, which tells the agent how good it is to take a specific action in a particular state.
-The idea is that the agent will learn over time which actions (traffic light phases) lead to the best results (reducing wait times for cars stuck in traffic/signal). In this problem we have continuous state space rather than discrete. So Q-table is update when agent explores a new state. Initially Q-table is empty.
+The idea is that the agent will learn over time which actions (traffic light phases) lead to the best results (reducing wait times for cars stuck in traffic/signal). In this problem we have continuous state space rather than discrete. So Q-table is updated when agent explores a new state. Initially Q-table is empty.
 
 <h3> Key Functions in the Agent </h3>
 
@@ -193,7 +193,7 @@ In order to run the code, use the following command:
 
     python train.py
 
-<video controls src="Screencast from 13-12-2024 15_05_09.mp4" title="Title"></video>
+[![Watch the video](thumbnail.png)](https://drive.google.com/file/d/1yXx80XOR9vG09wPnh2W_t1vo_5_yQBH4/view?usp=sharing)
 
 <h1 style="font-size: 24px;">Test</h1>
 This file evaluates the performance of a trained Q-learning agent in a traffic simulation.
@@ -208,7 +208,8 @@ In order to run the code, use the following command:
     ```bash
 
     python test.py
-<video controls src="test.mp4" title="Title"></video>
+[![Watch the video](thumbnail.png)](https://drive.google.com/file/d/1VfQgDuK-0ie7cF29t-CVbPnMYh3ZGre5/view?usp=sharing)
+
 **Performance Metrics**:
 Actions chosen for each state.
 Total rewards earned.
