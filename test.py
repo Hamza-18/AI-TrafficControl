@@ -3,7 +3,7 @@ from env import Enviornment
 from agent import Qagent
 import numpy as np
 
-traci.start(["venv/bin/sumo-gui", "-n", "intersection.net.xml","-r", "intersection.rou.xml", "--start", "--delay", "5"])  # Use sumo-gui for GUI mode
+traci.start(["venv/bin/sumo-gui", "-n", "intersection.net.xml","-r", "intersection.rou.xml", "--start", "--delay", "200"])  # Use sumo-gui for GUI mode
 
 # Load Q-table from the saved file (use the appropriate loading method)
 q_table = np.load('q_table.npy', allow_pickle=True).item()
