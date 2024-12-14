@@ -82,9 +82,9 @@ class Enviornment:
             self.reward += 25 
         elif state_map[traffic_flow_top_right]== state_map[traffic_flow_top_right]:
             if state_map[traffic_flow_top_right] == 0:
-                self.reward += 5
+                self.reward += 10
             else:
-                self.reward -= 2
+                self.reward -= 5
         
         # bottom lane
         if state_map[traffic_flow_bot] > state_map[traffic_flow_bot_old]:
@@ -93,9 +93,9 @@ class Enviornment:
             self.reward += 25 
         elif state_map[traffic_flow_bot] == state_map[traffic_flow_bot_old]:
             if state_map[traffic_flow_bot] == 0:
-                self.reward += 5
+                self.reward += 10
             else:
-                self.reward -= 2
+                self.reward -= 5
         # bottom left lane
         if state_map[traffic_flow_bot_left] > state_map[traffic_flow_bot_left_old]:
             self.reward -= 5 * state_map[traffic_flow_bot_left]
@@ -103,9 +103,9 @@ class Enviornment:
             self.reward += 25 
         elif state_map[traffic_flow_bot_left] == state_map[traffic_flow_bot_left_old]:
             if state_map[traffic_flow_bot_left] == 0:
-                self.reward += 5
+                self.reward += 10
             else:
-                self.reward -= 2
+                self.reward -= 5
         # top lane
         if state_map[traffic_flow_top] > state_map[traffic_flow_top_old]:
             self.reward -= 5 * state_map[traffic_flow_top]
@@ -113,9 +113,9 @@ class Enviornment:
             self.reward += 25
         elif state_map[traffic_flow_top] == state_map[traffic_flow_top_old]:
             if state_map[traffic_flow_top] == 0:
-                self.reward += 5
+                self.reward += 10
             else:
-                self.reward -= 2   
+                self.reward -= 5 
         # penalize invalid actions
         s = traci.trafficlight.getRedYellowGreenState(self.tl_id)
         valid_transitions = {
