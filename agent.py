@@ -55,6 +55,8 @@ class Qagent:
 
     def choose_action_test(self, state):
         # Always choose the action with the highest Q-value (greedy)
+        if state not in self.q_table:
+            return "yyyy"
         self.action = np.argmax(self.q_table[state])
         print(f"Chosen Action: {self.action_map[self.action]}")
         return self.action_map[self.action]

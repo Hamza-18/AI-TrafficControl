@@ -221,7 +221,7 @@ In order to run the code, use the following command:
 
 Click the Image below to watch a short video
 
-[![Watch the video](thumbnail.png)](https://drive.google.com/file/d/1VfQgDuK-0ie7cF29t-CVbPnMYh3ZGre5/view?usp=sharing)
+[![Watch the video](thumbnail.png)](https://drive.google.com/file/d/1IQ7BgcU5jxa7yqhtAvG5dyf-qcuxJcJg/view?usp=sharing)
 
 **Performance Metrics**:
 Actions chosen for each state.
